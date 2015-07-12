@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+		infrastructure -->
+
+	<!-- Scans within the base package of the application for @Components to 
+		configure as beans -->
+	<!-- @Controller, @Service, @Configuration, etc. -->
+	<context:component-scan base-package="com.customtime" />
+	<mvc:annotation-driven />
+ 	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/changePassword.giy" />
+			<mvc:mapping path="/editKey.giy" />
+			<mvc:mapping path="/ukeyInfo.giy" />
+			<mvc:mapping path="/filemanager.giy"/>
+			<mvc:mapping path="/fileOp/*"/>
+			<bean class="com.customtime.data.storagechange.web.interceptor.LoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<!-- velocity模板引擎 -->
+	<bean id="velocityConfigurer"
+		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath">
+			<value>velocity/</value>
+		</property>
+		<property name="velocityProperties">
+			<props>
+				<prop key="input.encoding">UTF8</prop>
+				<prop key="output.encoding">UTF8</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- 解析velocity -->
+	<bean id="viewResolver" class="com.customtime.data.storagechange.web.view.CTViewResolver">
+		<property name="suffix">
+			<value>.vm</value>
+		</property>
+		<property name="contentType">
+			<value>text/html;charset=UTF8</value>
+		</property>
+		<property name="exposeRequestAttributes">
+			<value>true</value>
+		</property>
+		<property name="exposeSessionAttributes">
+			<value>true</value>
+		</property>
+		<property name="staticAttributes">
+			<map>
+				<entry key="keyType">
+					<map>
+						<entry key="ossService" value="阿里云存储" />
+						<entry key="bcsService" value="百度云存储" />
+						<entry key="gcsService" value="盛大云存储" />
+						<entry key="s3Service" value="AWS-S3" />
+						<entry key="googcsService" value="谷歌云存储" />
+					</map>
+				</entry>
+			</map>
+		</property>
+		<property name="viewClass" value="com.customtime.data.storagechange.web.CTView" />
+	</bean>
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">  
+		<property name="persistenceUnitName" value="openjpa" />
+    	<property name="persistenceXmlLocation" value="classpath:/META-INF/persistence.xml" />
+    </bean>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager" lazy-init="true">  
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>  
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    <bean class="com.customtime.data.storagechange.web.service.OperationalService">
+    	<property name="serviceMap">
+    		<map>
+    			<entry key="ossService">
+    				<ref bean="ALiOSSService"/>
+    			</entry>
+    			<entry key="bcsService">
+    				<ref bean="baiDuBCSService"/>
+    			</entry>
+    			<entry key="gcsService">
+    				<ref bean="grandGCSService"/>
+    			</entry>
+    			<entry key="s3Service">
+    				<ref bean="awsS3Service" />
+    			</entry>
+    			<entry key="googcsService">
+    				<ref bean="googleGCSService" />
+    			</entry>
+    		</map>
+    	</property>
+    </bean>
+</beans>

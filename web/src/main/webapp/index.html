@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='zh-CN' xml:lang='zh-CN' xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>云存储切换平台|云存储之间的快速切换</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="云,云存储,切换,云存储切换">
+	<meta name="author" content="xxcxy">
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+	<link href="css/bootstrap-slate.css" rel="stylesheet">
+	<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="css/charisma-app.css" rel="stylesheet">
+	<!-- The styles -->
+	<style type="text/css">
+		body {
+			padding-bottom: 40px;
+		}
+		.sidebar-nav {
+			padding: 15px 0;
+			min-height:460px;
+		}
+		.show-grid {
+			margin-top: 10px;
+			margin-bottom: 20px;
+			color:white;
+		}
+	 	#topcustom {
+	 		padding:15px;
+	 	}
+	 	#imagecontainer {
+			width:580px;
+			padding:10px;
+			position:relative;
+			z-index:0;
+		}
+		#images {
+			width:600px;
+			height:350px;
+			position:relative;
+		}
+		#ribbon {
+			position:absolute;
+			top:-3px;
+			left:-15px;
+			z-index:500;
+		}
+		#frame {
+			position:absolute;
+			z-index:0;
+			width:999px;
+			height:571px;
+			top:-3px;
+			left:-80px;
+			max-width:1039px;
+		}
+		#slides {
+			position:absolute;
+			top:22px;
+			left:34px;
+			z-index:100;
+		}
+		.slides_container {
+			width:770px;
+			overflow:hidden;
+			position:relative;
+			display:none;
+		}
+		.slides_container div.slide {
+			width:770px;
+			height:460px;
+			display:block;
+		}
+		#slides .next,#slides .prev {
+			position:absolute;
+			top:177px;
+			left:-45px;
+			width:24px;
+			height:43px;
+			display:block;
+			z-index:101;
+		}
+		#slides .next {
+			left:790px;
+		}
+		.pagination {
+			margin:26px auto 0;
+			width:100px;
+		}
+		.pagination li {
+			float:left;
+			margin:0 1px;
+			list-style:none;
+		}
+		.pagination li a {
+			display:block;
+			width:12px;
+			height:0;
+			padding-top:12px;
+			background-image:url(img/pagination.png);
+			background-position:0 0;
+			float:left;
+			overflow:hidden;
+			padding:6px 0px;
+		}
+		.pagination li.current a {
+			background-position:0 -12px;
+		}
+	 	.caption {
+			z-index:500;
+			position:absolute;
+			bottom:-35px;
+			left:0;
+			height:30px;
+			padding:5px 30px 0 30px;
+			width:240px;
+			font-size:3.3em;
+			line-height:1.33;
+			color:#fff;
+			text-shadow:none;
+		}
+	</style>
+
+	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+</head>
+<body>
+<!-- topbar starts -->
+<div class="navbar">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<a class="btn btn-navbar" data-toggle="collapse"
+				data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse"> <span
+				class="icon-bar"></span> <span class="icon-bar"></span> <span
+				class="icon-bar"></span>
+			</a> <a class="brand" href="javascript:void()"><span>云存储切换</span></a>
+
+			<div class="top-nav nav-collapse">
+				<ul class="nav">
+					<li class="active" ><a href="javascript:void()">首页</a></li>
+					<li ><a href="filemanager.giy">文件转移</a></li>
+					<li ><a href="ukeyInfo.giy">认证管理</a></li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+	</div>
+</div>
+<!-- topbar ends -->
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3" id="topcustom">
+      <div class="well sidebar-nav">
+      	  <p class="show-grid">已完美支持以下平台:</p>
+      	  <div class="span10 show-grid"><img src="img/indexImage/aliLogo.png" width="150" height="40" class="img-rounded"></div>
+      	  <div class="span10 show-grid"><img src="img/indexImage/baiduLogo.png" width="150" height="40" class="img-rounded"></div>
+      	  <div class="span10 show-grid"><img src="img/indexImage/shengdaLogo.jpg" width="150" height="40" class="img-rounded"></div>
+      	  <div class="span10 show-grid"><img src="img/indexImage/logo_aws.png" width="150" height="40" class="img-rounded"></div>
+      	  <div class="span10 show-grid"><img src="img/indexImage/googcs_logo.png" width="150" height="40" class="img-rounded"></div>
+      </div>
+    </div>
+    <div class="span9">
+      <div id="imagecontainer">
+      <div id="images">
+		<div id="slides">
+				<div class="slides_container">
+					<div class="slide">
+						<img src="img/indexImage/zhuangyi.jpg" width="770" height="460">
+						<div class="caption" style="bottom:0">
+							<p>一键转移所有存储</p>
+						</div>
+					</div>
+					<div class="slide">
+						<img src="img/indexImage/xuchuang1.jpg" width="770" height="460">
+						<div class="caption" style="bottom:0">
+							<p>指定文件转移</p>
+						</div>
+					</div>
+					<div class="slide">
+						<img src="img/indexImage/pingt1.jpg">
+						<div class="caption" style="bottom:0" width="770" height="460">
+							<p>支持大部分主流云存储平台</p>
+						</div>
+					</div>
+				</div> <!-- slides container -->
+				
+				<a href="#" class="prev"><img src="img/arrow-prev.png" width="24" height="43" alt="Arrow Prev"></a>
+				<a href="#" class="next"><img src="img/arrow-next.png" width="24" height="43" alt="Arrow Next"></a>
+			</div> <!-- slides  -->	
+			<img src="img/example-frame.png" width="839" id="frame">
+    	</div>
+    </div>
+    </div>
+  </div>
+  <hr>
+  <footer>
+	<p class="pull-left">
+		&copy; customtime  2013
+	</p>
+	<p class="pull-right">
+		Powered by: xxcxy
+	</p>
+	<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000069952'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s22.cnzz.com/z_stat.php%3Fid%3D1000069952%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+  </footer>
+</div>
+<script src="js/jquery-1.9.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/slides.min.jquery.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#slides').slides({
+			preload: true,
+			preloadImage: 'img/loading.gif',
+			play: 5000,
+			pause: 2500,
+			hoverPause: true,
+			animationStart: function(current){
+				$('.caption').animate({
+					bottom:-35
+				},100);
+			},
+			animationComplete: function(current){
+				$('.caption').animate({
+					bottom:300
+				},200);
+			},
+			slidesLoaded: function() {
+				$('.caption').animate({
+					bottom:300
+				},200);
+			}
+		});
+	});	
+</script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='zh-CN' xml:lang='zh-CN' xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>云存储切换平台|云存储之间的快速切换</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="云,云存储,切换,云存储切换">
+	<meta name="author" content="xxcxy">
+	<link rel="shortcut icon" type="image/x-icon" href="${baseUrl}/favicon.ico" />
+	<link href="${baseUrl}/css/bootstrap-slate.css" rel="stylesheet">
+	<link href="${baseUrl}/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="${baseUrl}/css/jquery-ui-1.10.1.custom.min.css" rel="stylesheet">
+	<link href='${baseUrl}/css/elfinder.min.css' rel='stylesheet'>
+	<link href='${baseUrl}/css/elfinder.theme.css' rel='stylesheet'>
+	<link href="${baseUrl}/css/charisma-app.css" rel="stylesheet">
+	<!-- The styles -->
+	<style type="text/css">
+	  body {
+		padding-bottom: 40px;
+	  }
+	  .sidebar-nav {
+		padding: 9px 0;
+	  }
+	  .box-header {
+	  	cursor: auto;
+	  }
+	  .elfinder .elfinder-workzone .elfinder-navbar{
+	  	width:150px;
+	  }
+	  .atextstyle {
+	  	font-size:40px;
+	  	border:1px;
+	  }
+	  .elfinder-button-icon-bucketTransfer {
+	  	background-image: url(img/glyphicons-halflings.png);
+	  	background-position: -120px -72px;
+	  }
+	</style>
+	
+	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+		
+</head>
+<body>
+#set($menu='fileManager')
+#parse("header.vm")
+<div class="container-fluid">
+	<div class="row" id="fmLoc">
+
+		<noscript>
+			<div class="alert alert-block span10">
+				<h4 class="alert-heading">Warning!</h4>
+				<p>
+					You need to have <a href="http://en.wikipedia.org/wiki/JavaScript"
+						target="_blank">JavaScript</a> enabled to use this site.
+				</p>
+			</div>
+		</noscript>
+
+		<div id="content" class="span6">
+			<!-- left content starts -->
+
+			<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header well" data-original-title>
+						<h2>
+							<i class="icon-folder-open"></i> <span id="left_keyName">File Manager</span>
+						</h2>
+						<div class="box-icon pull-right">
+							<a href="javascript:removeFm('left')" class="btn btn-close"><i class="icon-remove"></i></a>
+						</div>
+						<div class="btn-group pull-right">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								<i class="icon-cog"></i><span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu" role="menu">
+								#foreach($key in $userKeys)
+								<li><a href="javascript:void(0);" onclick="changePre('left',$key.skeyId,'$!key.keyName')">$!key.keyName</a></li>
+								#end
+							</ul>
+						</div>
+					</div>
+					<div class="box-content">
+						<div id="left_key_content">
+							<ul class="thumbnails">
+							#foreach($key in $userKeys)
+							  <li>
+							  	<div class="thumbnail">
+								    <a href="javascript:void(0);" title="$!key.keyDescription" onclick="changePre('left',$key.skeyId,'$!key.keyName')" class="btn btn-large btn-inverse atextstyle">
+								      #if($vmUtil.getStringLeng($!key.keyName) gt 4)
+								       $vmUtil.getSubString($!key.keyName,3) ...
+								      #else
+								      	$!key.keyName
+								      #end
+								    </a>
+							    </div>
+							  </li>
+							 #end
+							</ul>
+						</div>
+						<div id="left_file_manager" class="file-manager"></div>
+					</div>
+				</div>
+				<!--/span-->
+
+			</div>
+			<!--/row-->
+			<!-- left content ends -->
+		</div>
+		<!--/#content.span10-->
+		
+		<div id="content" class="span6">
+			<!-- right content starts -->
+
+			<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header well" data-original-title>
+						<h2>
+							<i class="icon-folder-open"></i> <span id="right_keyName">File Manager</span>
+						</h2>
+						<div class="box-icon pull-right">
+							<a href="javascript:removeFm('right')" class="btn btn-close"><i class="icon-remove"></i></a>
+						</div>
+						<div class="btn-group pull-right">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								<i class="icon-cog"></i><span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu" role="menu">
+								#foreach($key in $userKeys)
+								<li><a href="javascript:void(0);" onclick="changePre('right',$key.skeyId,'$!key.keyName')">$!key.keyName</a></li>
+								#end
+							</ul>
+						</div>
+					</div>
+					<div class="box-content">
+						<div id="right_key_content">
+							<ul class="thumbnails">
+							#foreach($key in $userKeys)
+							  <li>
+							  	<div class="thumbnail">
+								    <a href="javascript:void(0);" title="$!key.keyDescription" onclick="changePre('right',$key.skeyId,'$!key.keyName')" class="btn btn-large btn-inverse atextstyle">
+								      #if($vmUtil.getStringLeng($!key.keyName) gt 4)
+								       $vmUtil.getSubString($!key.keyName,3) ...
+								      #else
+								      	$!key.keyName
+								      #end
+								    </a>
+							    </div>
+							  </li>
+							 #end
+							</ul>
+						</div>
+						<div id="right_file_manager" class="file-manager"></div>
+					</div>
+				</div>
+				<!--/span-->
+
+			</div>
+			<!--/row-->
+			<!-- right content ends -->
+		</div>
+		
+		<div id="dialog" title="提示信息">
+		  <p id="dialogcontent"></p>
+		</div>
+		
+		<!--/#content.span10-->
+	</div>
+	<!--/fluid-row-->
+	<hr>
+	#parse("footer.vm")
+</div>
+<script src="${baseUrl}/js/jquery-1.9.1.min.js"></script>
+<script src="${baseUrl}/js/bootstrap.min.js" ></script>
+<script src="${baseUrl}/js/jquery-ui-1.10.1.custom.min.js"></script>
+<script src="${baseUrl}/js/elfinder.min.js" ></script>
+<script src="${baseUrl}/js/elfinder.zh_CN.js "></script>
+<script type="text/javascript">
+var leftM;
+var rightM;
+$(document).ready(function(){
+	$( "#dialog" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind"
+      },
+      hide: {
+        effect: ""
+      }
+	});
+});
+function tcb(fm) {
+	var targetKeyId;
+	var targetHash;
+	var sourceHash;
+	var type;
+	if(fm == leftM&&rightM){
+		targetKeyId = rightM.options.customData.skeyId
+		var asf = fm.selectedFiles();
+		var tasf = rightM.selectedFiles();
+		if(asf&&asf.length==1){
+			sourceHash = asf[0].hash;
+			if(asf[0].mime=='directory')
+				type="d2d";
+			else
+				type="f2d";
+		}else{
+			cusAlert("请选择一个源文件或文件夹");
+			return false;
+		}
+		if(tasf&&tasf.length==1&&tasf[0].mime == 'directory'){
+			targetHash = tasf[0].hash;
+		}else{
+			cusAlert("请选择一个目标文件夹");
+			return false;
+		}
+	}else if(fm == rightM &&leftM){
+		targetKeyId = leftM.options.customData.skeyId
+		var asf = fm.selectedFiles();
+		var tasf = leftM.selectedFiles();
+		if(asf&&asf.length==1){
+			sourceHash = asf[0].hash;
+			if(asf[0].mime=='directory')
+				type="d2d";
+			else
+				type="f2d";
+		}else{
+			cusAlert("请选择一个源文件或文件夹");
+			return false;
+		}
+		if(tasf&&tasf.length==1&&tasf[0].mime == 'directory'){
+			targetHash = tasf[0].hash;
+		}else{
+			cusAlert("请选择一个目标文件夹");
+			return false;
+		}
+	}else if(!rightM || !leftM){
+		cusAlert("没有可转移的存储系统");
+		return false;
+	}else{
+		cusAlert("无法判断源文件");
+		return false;
+	}
+	return {"targetHash":targetHash,"sourceHash":sourceHash,"targetKeyId":targetKeyId,"type":type};
+}
+function btcb(fm) {
+	var targetKeyId;
+	var targetHash;
+	var sourceHash;
+	if(fm == leftM&&rightM){
+		targetKeyId = rightM.options.customData.skeyId
+		sourceHash = fm.root();
+		if(rightM.root()==rightM.cwd().hash)
+			targetHash = rightM.root();
+		else
+			targetHash = sourceHash;
+	}else if(fm == rightM&&leftM){
+		targetKeyId = leftM.options.customData.skeyId
+		sourceHash = fm.root();
+		if(leftM.root()==leftM.cwd().hash)
+			targetHash = leftM.root();
+		else
+			targetHash = sourceHash;
+	}else if(!rightM || !leftM){
+		cusAlert("没有可转移的存储系统");
+		return false;
+	}else{
+		cusAlert("无法判断源文件");
+		return false;
+	}
+	return {"targetHash":targetHash,"sourceHash":sourceHash,"targetKeyId":targetKeyId,"type":"d2d"};
+}
+function cusAlert(msg){
+	$("#dialogcontent").html(msg);
+	$( "#dialog" ).dialog("open");
+}
+function beforeOpen(key){
+	var result = false;
+ 	jQuery.ajax({
+        type: "get",
+        async: false,           
+        url: "fileOp/beforeOpen.giy",
+        data: {skeyId:key},
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        success: function (data) {
+        	if(data.code=="access"){
+        		result = true;
+    		}else if(data.code=="error"){
+    			cusAlert("打开失败");
+    			result = false;
+    		}else if(data.code=="toGoogAuth"){
+    			var win = window.open("goog/fileOp/controller?skeyId="+key);
+    			result = false;
+    			win.focus();
+    		}
+        },
+        error: function (err) {
+        	cusAlert("打开失败");
+        	result = false;
+        }
+    });
+	return result;
+}
+function changePre(loc,key,keyName){
+	if(!beforeOpen(key))
+		return;
+	if(loc=="left"){
+		var rKey ;
+		if(rightM)
+			rKey = rightM.options.customData.skeyId;
+		if(key==rKey){
+			cusAlert("这个用户已经显示在右边了，不能重复进入");
+			return ;
+		}else{
+			initFm("left",key,keyName);
+		}
+	}else if(loc=="right"){
+		var lKey ;
+		if(leftM)
+			lKey = leftM.options.customData.skeyId;
+		if(key==lKey){
+			cusAlert("这个用户已经显示在左边了，不能重复进入");
+			return ;
+		}else{
+			initFm("right",key,keyName);
+		}
+	}
+}
+function initFm(loc,key,keyName){
+	if(loc=="left"){
+		if(leftM)
+			leftM.destroy();
+		$("#left_key_content").hide();
+		leftM = getFm("#left_file_manager",key);
+		$("#left_keyName").html(keyName);
+	}else if(loc=="right"){
+		if(rightM)
+			rightM.destroy();
+		$("#right_key_content").hide();
+		rightM = getFm("#right_file_manager",key);
+		$("#right_keyName").html(keyName);
+	}
+}
+function removeFm(loc){
+	if(loc=="left"){
+		if(leftM)
+			leftM.destroy();
+		leftM = null;
+		$("#left_keyName").html("File Manager");
+		$("#left_key_content").show();
+		$("#left_file_manager").hide();
+	}else if(loc=="right"){
+		if(rightM)
+			rightM.destroy();
+		rightM = null;
+		$("#right_keyName").html("File Manager");
+		$("#right_key_content").show();
+		$("#right_file_manager").hide();
+	}
+}
+function getFm(divId,key){
+	$(divId).show();
+	return $(divId).elfinder({
+		url : 'fileOp/controller.giy',
+		lang : 'zh_CN',
+		customData : {'skeyId':key},
+		height : 500,
+		rememberLastDir : false,
+		commands : [ 'open', 'tree', 'transfer', 'bucketTransfer' ],
+		transferCallback : tcb,
+		bucketTransferCallback : btcb,
+		resizable : false,
+		contextmenu : {
+			navbar : [ 'open', '|', 'info' ],
+			cwd : [ 'reload', 'back', '|', 'info' ],
+			files : [ 'info', '|', 'transfer' ]
+		},
+		uiOptions : {
+			toolbar : [ [ 'back', 'forward' ],
+					[ 'reload' ], [ 'open' ], [ 'info' ],
+					[ 'transfer' ], ['bucketTransfer'] ],
+			tree : {
+				openRootOnLoad : true,
+				syncTree : true
+			},
+			navbar : {
+				minWidth : 150,
+				maxWidth : 150
+			},
+			cwd : {
+				oldSchool : false
+			}
+		}
+	}).elfinder('instance');
+}
+
+</script>
+</body>
+</html>

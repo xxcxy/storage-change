@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <!-- Servlets -->
+ 	<servlet>
+		<servlet-name>giyServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring-mvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+     </servlet>  
+     <servlet>
+		<servlet-name>initServlet</servlet-name>
+        <servlet-class>com.customtime.data.storagechange.web.servlet.InitServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+     </servlet>       
+     <servlet-mapping>
+        <servlet-name>giyServlet</servlet-name>
+        <url-pattern>*.giy</url-pattern>
+     </servlet-mapping>
+	<servlet>
+		<servlet-name>verifyCode</servlet-name>
+		<servlet-class>com.customtime.data.storagechange.web.servlet.VerifyCodeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>verifyCode</servlet-name>
+		<url-pattern>/verifyCode</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>gfc</servlet-name>
+		<servlet-class>com.customtime.data.storagechange.web.servlet.GoogAuthorizationCodeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>gfc</servlet-name>
+		<url-pattern>/goog/fileOp/controller</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>googCallback</servlet-name>
+		<servlet-class>com.customtime.data.storagechange.web.servlet.GoogAuthorizationCodeCallbackServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>googCallback</servlet-name>
+		<url-pattern>/goog/oauth2callback</url-pattern>
+	</servlet-mapping>
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+  <session-config>
+    <cookie-config>
+      <http-only>true</http-only>
+    </cookie-config>
+  </session-config>
+  
+	<error-page>
+    	<!-- Uncaught exception -->
+	    <error-code>500</error-code>
+	    <location>/error.html</location>
+	</error-page>
+	<error-page>
+	    <!-- Unsupported servlet method -->
+	    <error-code>503</error-code>
+	    <location>/error.html</location>
+	</error-page>
+	<error-page>
+	    <location>/error.html</location>
+	</error-page>
+</web-app>

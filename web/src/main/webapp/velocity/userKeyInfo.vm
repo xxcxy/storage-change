@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='zh-CN' xml:lang='zh-CN' xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>云存储切换平台|云存储之间的快速切换</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="云,云存储,切换,云存储切换">
+	<meta name="author" content="xxcxy">
+	<link rel="shortcut icon" type="image/x-icon" href="${baseUrl}/favicon.ico" />
+	<link href="${baseUrl}/css/bootstrap-slate.css" rel="stylesheet">
+	<link href="${baseUrl}/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="${baseUrl}/css/charisma-app.css" rel="stylesheet">
+	<!-- The styles -->
+	<style type="text/css">
+		body {
+			padding-bottom: 40px;
+		}
+		
+		.sidebar-nav {
+			padding: 9px 0;
+		}
+		.box-header {
+	  		cursor: auto;
+	 	 }
+	 	 .box-content {
+	 	 	min-height:450px;
+	 	 }
+	</style>
+
+	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+</head>
+<body>
+	#set($menu='keyManager')
+	#parse("header.vm")
+	<div class="container-fluid">
+			<!-- content starts -->
+			
+			<div class="row-fluid sortable">		
+				<div class="box span12">
+					<div class="box-header well" data-original-title>
+						<h2><i class="icon-user"></i> $!user.userName</h2>
+						<div class="box-icon">
+							<a href="javascript:showKey2Add()" class="btn btn-setting btn-primary"><i class="icon-plus"></i></a>
+						</div>
+					</div>
+					<div class="box-content">
+						<table class="table table-striped table-bordered bootstrap-datatable datatable">
+						  <thead>
+							  <tr>
+								  <th>签名别称</th>
+								  <th>签名标识</th>
+								  <th>云平台</th>
+								  <th>所属项目</th>
+								  <th>操作</th>
+							  </tr>
+						  </thead>   
+						  <tbody>
+						  #foreach($key in $userKeys)
+							<tr>
+								<td>$key.keyName</td>
+								<td class="center">$key.keyId</td>
+								<td class="center">$!options.get("keyType").get($key.keyType)</td>
+								<td class="center">$!key.project</td>
+								<td class="center">
+									<a class="btn btn-success " data-toggle="popover" data-placement="right" data-content="$key.keySecret" href="#">
+										<i class="icon-zoom-in icon-white"></i>  
+										显示签名值                                           
+									</a>
+									<a class="btn btn-info" href="javascript:showKey2Edit('$key.keyId','$key.keyName','$key.keySecret','$key.keyType','$key.skeyId')">
+										<i class="icon-edit icon-white"></i>  
+										修改签名                                            
+									</a>
+									<a class="btn btn-danger" href="javascript:deleteKey('$key.skeyId')">
+										<i class="icon-trash icon-white"></i> 
+										删除此签名
+									</a>
+								</td>
+							</tr>
+							#end
+						  </tbody>
+					  </table>            
+					</div>
+				</div><!--/span-->
+			
+			</div><!--/row-->
+			
+			<div id="keyEditModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="keyEditModalLabel" aria-hidden="true">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h3 id="keyEditModalLabel">新增签名</h3>
+					<input type="hidden" id="nowKeyId">
+				</div>
+				<div class="modal-body form-horizontal">
+				  <div class="control-group">
+					<label class="control-label" for="keyName">签名别称</label>
+					<div class="controls">
+					  <input type="text" id="keyName" placeholder="签名别称">
+					  <span class="help-inline red">*</span>
+				  </div>
+				  </div>
+					<div class="control-group">
+					<label class="control-label" for="keyId">签名标识</label>
+					<div class="controls">
+					  <input type="text" id="keyId" placeholder="签名标识">
+					  <span class="help-inline red">*</span>
+				  </div>
+				  </div>
+				  <div class="control-group">
+					<label class="control-label" for="keySecret">签名值</label>
+					<div class="controls">
+					  <input type="text" id="keySecret" placeholder="签名值">
+					  <span class="help-inline red">*</span>
+					</div>
+				  </div>
+				  <div class="control-group">
+					<label class="control-label" for="keyType">云平台</label>
+					<div class="controls">
+					  <select id="keyType">
+					  #foreach($kt in $options.get("keyType").entrySet())
+						<option value="$kt.key">$kt.value</option>
+					  #end
+					  </select>
+					  <span class="help-inline red">*</span>
+					</div>
+				  </div>
+				  <div class="control-group">
+					<label class="control-label" for="project">所属项目</label>
+					<div class="controls">
+					  <input type="text" id="project" placeholder="所属项目">
+					</div>
+				  </div>
+				  <div class="control-group">
+					<label class="control-label" for="keyDescription">签名描述</label>
+					<div class="controls">
+					  <textarea rows="3" id="keyDescription" placeholder="签名描述"></textarea>
+					</div>
+				  </div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+					<button onclick="saveKeyInfo()" class="btn btn-primary">保存签名</button>
+				</div>
+			</div><!-- /keyEditModal -->
+			
+		<hr>
+		#parse("footer.vm")
+	</div>
+	<script src="${baseUrl}/js/jquery-1.9.1.min.js"></script>
+	<script src="${baseUrl}/js/bootstrap.min.js"></script>
+	<script src="${baseUrl}/js/customtime-verify.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('[data-toggle="popover"]').popover({delay: { show: 400, hide: 200 }});
+	});	
+	function deleteKey(keyId){
+		jQuery.getJSON("editKey.giy",{"op":"del","sKeyId":keyId},function(data){
+			if(data.code!=0){
+				alert(data.msg);
+			}else{
+				location.href="${baseUrl}/ukeyInfo.giy";
+			}
+		});
+	}
+	function showKey2Edit(keyId,keyName,keySecret,keyType,sKeyId,keyDescription,project){
+		$("#nowKeyId").val(sKeyId);
+		$("#keyEditModalLabel").html("修改签名");
+		$("#keyName").val(keyName);
+		$("#keyId").val(keyId);
+		$("#keyId").attr("disabled",true);
+		$("#keySecret").val(keySecret);
+		$("#keySecret").attr("disabled",true);
+		$("#keyType").val(keyType);
+		$("#keyType").attr("disabled",true);
+		$("#keyDescription").val(keyDescription);
+		$("#project").val(project);
+		$("#project").attr("disabled",true);
+		$('#keyEditModal').modal('show');
+	}
+	function showKey2Add(){
+		$("#keyEditModalLabel").html("新增签名");
+		$("#nowKeyId").val("");
+		$("#keyName").val("");
+		$("#keyId").val("");
+		$("#keyDescription").val("");
+		$("#project").attr("disabled",false);
+		$("#project").val("");
+		$("#keyId").attr("disabled",false);
+		$("#keySecret").val("");
+		$("#keySecret").attr("disabled",false);
+		$("#keyType").val("");
+		$("#keyType").attr("disabled",false);
+		$('#keyEditModal').modal('show');
+	}
+	function saveKeyInfo(){
+		var requestData;
+		var sKeyId = $("#nowKeyId").val();
+		var keyName = $("#keyName").val();
+		var keyDescription = $("#keyDescription").val();
+		if(isNull(sKeyId)){
+			var keyId = $("#keyId").val();
+			var keySecret = $("#keySecret").val();
+			var keyType = $("#keyType").val();
+			var project = $("#project").val();
+			if(isNull(keyName)||isNull(keyId)||isNull(keySecret)||isNull(keyType)){
+				alert("属性值都不能为空");
+				return ;
+			}
+			if(keyType=="googcsService"&&isNull(project)){
+				alert("谷歌云存储的项目名不能为空");
+				return ;
+			}
+			requestData = {"op":"add","keyName":keyName,"keySer":keySecret,"keyType":keyType,"keyId":keyId,"keyDescription":keyDescription,"project":project};
+		}else{
+			if(isNull(keyName)){
+				alert("签名别称不能为空");
+				return ;
+			}
+			requestData = {"op":"update","keyName":keyName,"sKeyId":sKeyId,"keyDescription":keyDescription};
+		}
+		jQuery.getJSON("editKey.giy",requestData,function(data){
+			if(data.code!=0){
+				alert(data.msg);
+			}else{
+				location.href="${baseUrl}/ukeyInfo.giy";
+			}
+		});
+	}
+	</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!-- topbar starts -->
+<div class="navbar">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<a class="btn btn-navbar" data-toggle="collapse"
+				data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse"> <span
+				class="icon-bar"></span> <span class="icon-bar"></span> <span
+				class="icon-bar"></span>
+			</a> <a class="brand" href="$!baseUrl"><span>云存储切换</span></a>
+
+			<!-- user dropdown starts -->
+			#if($user)
+			<div class="btn-group pull-right">
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+					<i class="icon-user"></i><span class="hidden-phone"> $!user.userName</span> <span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="$!{baseUrl}/userInfo.giy">用户信息管理</a></li>
+					<li class="divider"></li>
+					<li><a href="$!{baseUrl}/logout.giy">退出</a></li>
+				</ul>
+			</div>
+			#end
+			<!-- user dropdown ends -->
+
+			<div class="top-nav nav-collapse">
+				<ul class="nav">
+					<li #if($menu eq 'index')  class="active" #end><a href="$!baseUrl">首页</a></li>
+					<li #if($menu eq 'fileManager')  class="active" #end><a href="$!baseUrl/filemanager.giy">文件转移</a></li>
+					<li #if($menu eq 'keyManager')  class="active" #end><a href="$!baseUrl/ukeyInfo.giy">认证管理</a></li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+	</div>
+</div>
+<!-- topbar ends -->

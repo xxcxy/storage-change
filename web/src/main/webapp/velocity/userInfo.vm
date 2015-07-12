@@ -1,0 +1,306 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='zh-CN' xml:lang='zh-CN' xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>云存储切换平台|云存储之间的快速切换</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="云,云存储,切换,云存储切换">
+	<meta name="author" content="xxcxy">
+	<link rel="shortcut icon" type="image/x-icon" href="${baseUrl}/favicon.ico" />
+	<link href="${baseUrl}/css/bootstrap-slate.css" rel="stylesheet">
+	<link href="${baseUrl}/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="${baseUrl}/css/charisma-app.css" rel="stylesheet">
+	<!-- The styles -->
+	<style type="text/css">
+		body {
+			padding-bottom: 40px;
+		}
+		
+		.sidebar-nav {
+			padding: 9px 0;
+		}
+		.box-header {
+	  		cursor: auto;
+	 	 }
+	</style>
+
+	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+</head>
+<body>
+	#set($menu='userInfo')
+	#parse("header.vm")
+	<div class="container-fluid">
+		<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header well" data-original-title>
+						<h2><i class="icon-edit"></i> 用户信息</h2>
+					</div>
+					<div class="box-content">
+						<form class="form-horizontal" action="javascript:userInfoEdit()">
+						<input type="hidden" id="userId" value="$!user.userId"/>
+							<fieldset>
+							  <div class="control-group">
+								<label class="control-label" for="userName">用户名</label>
+								<div class="controls red">
+								#if($user)
+								  <input type="hidden" id="userName" name="userName" value="$!user.userName">
+								  <span class="input-large uneditable-input">$!user.userName</span>
+								#else
+								  <input type="text" id="userName" placeholder="用户名">
+								  <span class="help-inline red">*</span>
+								#end
+								</div>
+							  </div>
+							  #if($user)
+							  <div class="control-group">
+							    <div class="controls">
+							  	  <a href="javascript:editPassword()"> 修改密码</a>
+							  	</div>
+							  </div>
+							  #else
+							  <div class="control-group">
+								<label class="control-label" for="password">密码</label>
+								<div class="controls">
+								  <input type="password" id="password" placeholder="密码">
+								  <span class="help-inline red">*</span>
+								</div>
+							  </div>
+							  <div class="control-group">
+								<label class="control-label" for="confirmPassword">确认密码</label>
+								<div class="controls">
+								  <input type="password" id="confirmPassword" placeholder="确认密码">
+								  <span class="help-inline red">*</span>
+								</div>
+							  </div>
+							  #end
+							  <div class="control-group">
+								<label class="control-label" for="email">邮箱</label>
+								<div class="controls">
+								  <input type="email" id="email" placeholder="邮箱地址" value="$!user.email">
+								  <span class="help-inline red">*</span>
+								</div>
+							  </div>
+							  <div class="control-group">
+								<label class="control-label" for="phone">联系电话</label>
+								<div class="controls">
+								  <input type="text" id="phone" placeholder="联系电话" value="$!user.phone">
+								  <span class="help-inline"></span>
+								</div>
+							  </div>
+							  <div class="control-group">
+								<label class="control-label" for="address">联系地址</label>
+								<div class="controls">
+								  <input type="text" id="address" placeholder="联系地址" value="$!user.address">
+								  <span class="help-inline"></span>
+								</div>
+							  </div>
+							  <div class="control-group">
+								<label class="control-label" for="company">公司名称</label>
+								<div class="controls">
+								  <input type="text" id="company" placeholder="公司名称" value="$!user.company">
+								  <span class="help-inline"></span>
+								</div>
+							  </div>
+							  <div class="control-group">
+								<label class="control-label" for="weburl">公司网站</label>
+								<div class="controls">
+								  <input type="text" id="webUrl" placeholder="公司网站" value="$!user.webUrl">
+								  <span class="help-inline"></span>
+								</div>
+							  </div>
+							  #if(!$user)
+							  <div class="control-group">
+								<label class="control-label" for="verify">验证码</label>
+								<div class="controls">
+								  <input type="text" id="verify" name="verify">
+								  <a href="javascript:changeImg()"><img id="imgObj" src="${baseUrl}/verifyCode?width=90&height=30"/></a>
+								</div>
+							  </div>
+							  #end
+							  <div class="alert alert-error hide" id="msgdiv"><p id="msg"></p><a class="close" href="javascript:hideMsg('msgdiv')">&times;</a></div>
+							  <div class="alert alert-success hide" id="msgdivSuccess">用户信息保存成功<a class="close" href="javascript:hideMsg('msgdivSuccess')">&times;</a></div>
+							  <div class="alert alert-success hide" id="passworddivSuccess">密码修改成功<a class="close" href="javascript:hideMsg('passworddivSuccess')">&times;</a></div>
+							  <div class="form-actions">
+								<button type="submit" class="btn btn-primary">#if($user) 保存  #else 注册 #end</button>
+								#if($user)
+								<a class="btn" href="${baseUrl}/userInfo.giy">重置</a>
+								#else
+								<button type="reset" class="btn">重置</button>
+							  	#end
+							  </div>
+							</fieldset>
+						  </form>
+					</div>
+				</div><!--/span-->
+		</div><!--/row-->
+		#if($user)
+			<div id="passwordModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h3 id="passwordModalLabel">修改密码</h3>
+				</div>
+				<div class="modal-body">
+				  <div class="control-group">
+					<label class="control-label" for="oldPassword">原密码</label>
+					<div class="controls">
+					  <input type="password" id="oldPassword" placeholder="原密码">
+					  <span class="help-inline red">*</span>
+				  </div>
+				  </div>
+					<div class="control-group">
+					<label class="control-label" for="newPassword">新密码</label>
+					<div class="controls">
+					  <input type="password" id="newPassword" placeholder="新密码">
+					  <span class="help-inline red">*</span>
+				  </div>
+				  </div>
+				  <div class="control-group">
+					<label class="control-label" for="confirmNewPassword">确认密码</label>
+					<div class="controls">
+					  <input type="password" id="confirmNewPassword" placeholder="确认密码">
+					  <span class="help-inline red">*</span>
+					</div>
+				  </div>
+				  <div class="control-group">
+					<label class="control-label" for="captcha">验证码</label>
+					<div class="controls">
+					  <input type="text" id="captcha" name="captcha">
+					  <a href="javascript:changeImg()"><img id="imgObj" src="${baseUrl}/verifyCode?width=90&height=30"/></a>
+					</div>
+				  </div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+					<button onclick="savePassword()" class="btn btn-primary">保存密码</button>
+				</div>
+			</div><!-- /passwordModal -->
+		#end
+			
+		<hr>
+		#parse("footer.vm")
+	</div>
+	<script src="${baseUrl}/js/jquery-1.9.1.min.js"></script>
+	<script src="${baseUrl}/js/bootstrap.min.js"></script>
+	<script src="${baseUrl}/js/customtime-verify.js"></script>
+	<script type="text/javascript">
+	var nextPath = "$!nextPath";
+	$(document).ready(function(){
+		if(nextPath!="")
+			nextPath = unescape(nextPath);
+	});	
+	function userInfoEdit(){
+		var userId = $("#userId").val();
+		var userName = $("#userName").val();
+		var email = $("#email").val();
+		var phone = $("#phone").val();
+		var address = $("#address").val();
+		var company = $("#company").val();
+		var webUrl = $("#webUrl").val();
+		var password = "";
+		var confirmPassword = "";
+		var verify = "";
+		if(isNull(userId)){
+			password = $("#password").val();
+			confirmPassword = $("#confirmPassword").val();
+			verify = $("#verify").val();
+		}
+		if(isNull(userName)){
+			alert("请填写用户名");
+			return ;
+		}else if(isNull(userId)&&isNull(password)){
+			alert("请填写密码");
+			return ;
+		}else if(isNull(userId)&&password!=confirmPassword){
+			alert("两次填写的密码不一致");
+			return ;
+		}else if(isNull(userId)&&isNull(verify)){
+			alert("请填写正确的验证码");
+			return ;
+		}else if(isNull(email)||!checkEmail(email)){
+			alert("请填写正确的邮箱地址");
+			return ;
+		}else if(!isNull(phone)&&!checkMobile(phone)){
+			alert("请填写正确的手机号码");
+			return ;
+		}
+		var requestData = {"userId":userId,"userName":userName,"email":email,"phone":phone,"address":address,"company":company,"webUrl":webUrl,"password":password,"verify":verify};
+		jQuery.getJSON("saveUserInfo.giy",requestData,function(data){
+			if(data.code==0){
+				if(nextPath!="")
+					location.href = nextPath;
+				else
+					location.href = "$baseUrl/editKey";
+			}else if(data.code==1){
+				$("#msg").html(data.msg);
+				$("#msgdiv").show();
+				if(isNull(userId)){
+					$("#verify").val("");
+					changeImg();
+				}
+			}else{
+				$("#msgdivSuccess").show();
+			}
+		});
+	}
+	function hideMsg(divName){
+		$("#"+divName).hide();
+	}
+	function editPassword(){
+		$("#oldPassword").val("");
+		$("#newPassword").val("");
+		$("#confirmNewPassword").val("");
+		$("#captcha").val("");
+		changeImg();
+		$('#passwordModal').modal('show');
+	}
+	function savePassword(){
+		var oldPassword = $("#oldPassword").val();
+		var newPassword = $("#newPassword").val();
+		var confirmPassword = $("#confirmNewPassword").val();
+		var captcha = $("#captcha").val();
+		 if(isNull(oldPassword)){
+			alert("原密码不能为空");
+			return ;
+		}else if(isNull(newPassword)){
+			alert("新密码不能为空");
+			return ;
+		}else if(confirmPassword!=newPassword){
+			alert("两次输入新密码不一致");
+			return ;
+		}else if(isNull(captcha)){
+			alert("验证码不正确");
+			return ;
+		}
+		 jQuery.getJSON("changePassword.giy",{"oldPassword":oldPassword,"newPassword":newPassword,"verify":captcha},function(data){
+			if(data.code==0){
+				$('#passwordModal').modal('hide');
+				$("#passworddivSuccess").show();
+			}else{
+				$("#captcha").val("");
+				changeImg();
+				alert(data.msg);
+			}
+		});
+	}
+	function changeImg(){   
+	    var imgSrc = $("#imgObj");   
+	    var src = imgSrc.attr("src");   
+	    imgSrc.attr("src",chgUrl(src));   
+	}   
+	function chgUrl(url){   
+	    var timestamp = (new Date()).valueOf();
+	    if((url.indexOf("?")>=0)){   
+	        url = url + "&tamp=" + timestamp;   
+	    }else{   
+	        url = url + "?timestamp=" + timestamp;   
+	    }   
+	    return url;   
+	}
+	</script>
+</body>
+</html>
