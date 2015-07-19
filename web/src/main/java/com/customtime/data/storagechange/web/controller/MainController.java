@@ -1,7 +1,6 @@
 package com.customtime.data.storagechange.web.controller;
 
-import java.io.IOException;
-
+import javax.annotation.Resource;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -9,29 +8,29 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.customtime.data.storagechange.service.util.StringUtil;
 import com.customtime.data.storagechange.web.bean.UserBean;
 import com.customtime.data.storagechange.web.bean.UserKey;
 import com.customtime.data.storagechange.web.dataservice.UserService;
 import com.customtime.data.storagechange.web.util.Constants;
+import com.customtime.data.storagechange.web.vo.ResponseVo;
 
 @Controller
 public class MainController extends BaseController{
 	public static final Log logger = LogFactory.getLog(MainController.class);
 
-	@Autowired
+	@Resource
 	private UserService userService;
 	
 	@RequestMapping("/login")
-	public void login(String userName,String password,String remember,String verify,HttpServletResponse res,HttpSession session){
+	public @ResponseBody ResponseVo login(String userName,String password,String remember,String verify,HttpServletResponse res,HttpSession session){
 		if(!verifyValid(verify,session)){
-			String result = "{\"code\":1,\"msg\":\"验证码错误!\"}";
-			responseJson(res,result);
+			return new ResponseVo("1","验证码错误!");
 		}else{
 			UserBean user = userService.getUserBean(userName,StringUtil.MD5Encode(password));
 			if(user!=null){
@@ -44,12 +43,13 @@ public class MainController extends BaseController{
 		        	res.addCookie(cookie); 
 				}
 				session.setAttribute(Constants.SESSION_USER,user);
-				responseJson(res,"{\"code\":0}");
+				return new ResponseVo("0","");
 			}else{
-				responseJson(res,"{\"code\":2,\"msg\":\"用户名或者密码错误\"}");
+				return new ResponseVo("2","用户名或者密码错误");
 			}
 		}
 	}
+	
 	@RequestMapping("/regist")
 	public String toRegist(String nextPath,ModelMap model){
 		if(StringUtil.isNotBlank(nextPath))
@@ -68,7 +68,7 @@ public class MainController extends BaseController{
 			return "login";
 	}
 	@RequestMapping("/saveUserInfo")
-	public void saveUserInfo(String userId,String userName,String email,String phone,String company,String address,String webUrl,String verify,String password,HttpSession session,ServletResponse res){
+	public @ResponseBody ResponseVo saveUserInfo(String userId,String userName,String email,String phone,String company,String address,String webUrl,String verify,String password,HttpSession session,ServletResponse res){
 		if(StringUtil.isNotBlank(userId)){
 			UserBean user = userService.getUserBean(Long.parseLong(userId));
 			if(user!=null){
@@ -84,17 +84,17 @@ public class MainController extends BaseController{
 					user.setWebUrl(webUrl);
 				userService.updateUser(user);
 				session.setAttribute(Constants.SESSION_USER,user);
-				responseJson(res,"{\"code\":2}");
+				return new ResponseVo("2","");
 			}else{
-				responseJson(res,"{\"code\":1,\"msg\":\"用户不存在\"}");
+				return new ResponseVo("1","用户不存在");
 			}
 		}else{
 			if(StringUtil.isBlank(userName)||StringUtil.isBlank(password)||StringUtil.isBlank(email)){
-				responseJson(res,"{\"code\":1,\"msg\":\"用户名，密码，邮箱都不能为空\"}");
+				return new ResponseVo("1","用户名，密码，邮箱都不能为空");
 			}else if(!verifyValid(verify,session)){
-				responseJson(res,"{\"code\":1,\"msg\":\"验证码错误\"}");
+				return new ResponseVo("1","验证码错误");
 			}else if(userService.isExistUser(userName)){
-				responseJson(res,"{\"code\":1,\"msg\":\"用户名已存在\"}");
+				return new ResponseVo("1","用户名已存在");
 			}else{
 				UserBean userBean = new UserBean();
 				userBean.setAddress(address);
@@ -106,41 +106,41 @@ public class MainController extends BaseController{
 				userBean.setWebUrl(webUrl);
 				userService.addUser(userBean);
 				session.setAttribute(Constants.SESSION_USER, userBean);
-				responseJson(res,"{\"code\":0,\"msg\":\"注册成功\"}");
+				return new ResponseVo("0","注册成功");
 			}
 				
 		}
 	}
 	@RequestMapping("/changePassword")
-	public void changePassword(String oldPassword,String newPassword,String verify,ServletResponse res,HttpSession session){
+	public @ResponseBody ResponseVo changePassword(String oldPassword,String newPassword,String verify,ServletResponse res,HttpSession session){
 		Long userId = ((UserBean)session.getAttribute(Constants.SESSION_USER)).getUserId();
 		if(StringUtil.isBlank(oldPassword)||StringUtil.isBlank(newPassword)){
-			responseJson(res,"{\"code\":1,\"msg\":\"修改失败，参数不完整\"}");
+			return new ResponseVo("1","修改失败，参数不完整");
 		}else if(!verifyValid(verify,session)){
-			responseJson(res,"{\"code\":1,\"msg\":\"验证码错误\"}");
+			return new ResponseVo("1","验证码错误");
 		}else{
 			UserBean user = userService.getUserBean(userId);
 			if(user!=null&&user.getPassword().equals(StringUtil.MD5Encode(oldPassword))){
 				user.setPassword(StringUtil.MD5Encode(newPassword));
 				userService.updateUser(user);
-				responseJson(res,"{\"code\":0,\"msg\":\"密码修改成功\"}");
+				return new ResponseVo("0","密码修改成功");
 			}else{
-				responseJson(res,"{\"code\":1,\"msg\":\"密码错误\"}");
+				return new ResponseVo("1","密码错误");
 			}
 		}
 	}
 	@RequestMapping("/editKey")
-	public void editKey(String op,String sKeyId,String keyName,String keySer,String keyType,String keyId,String keyDescription,String project,ServletResponse res,HttpSession session){
+	public @ResponseBody ResponseVo editKey(String op,String sKeyId,String keyName,String keySer,String keyType,String keyId,String keyDescription,String project,ServletResponse res,HttpSession session){
 		Object obj = session.getAttribute(Constants.SESSION_USER);
+		ResponseVo rvo = null;
 		if(obj==null||!(obj instanceof UserBean)){
-			responseJson(res,"{\"code\":5,\"msg\":\"未登录\"}");
+			rvo = new ResponseVo("5","未登录");
 		}else{
 			UserBean user = userService.getUserBean(((UserBean)obj).getUserId());
 			if("add".equals(op)){
 				for(UserKey uk:user.getSkey()){
 					if(uk.getKeyId().equals(keyId)&&uk.getKeyType().equals(keyType)){
-						responseJson(res,"{\"code\":1,\"msg\":\"键已存在\"}");
-						return;
+						rvo = new ResponseVo("1","键已存在");
 					}
 				}
 				UserKey skey = new UserKey();
@@ -151,32 +151,33 @@ public class MainController extends BaseController{
 				skey.setKeyDescription(keyDescription);
 				skey.setProject(project);
 				userService.addSKey(user.getUserId(), skey);
-				responseJson(res,"{\"code\":0,\"msg\":\"新增成功\"}");
+				rvo = new ResponseVo("0","新增成功");
 			}else if("update".equals(op)){
 				if(StringUtil.isBlank(sKeyId)){
-					responseJson(res,"{\"code\":1,\"msg\":\"键不存在\"}");
+					rvo = new ResponseVo("1","键不存在");
 				}else{
 					UserKey uk = userService.getUserKey(Long.parseLong(sKeyId));
 					if(uk==null){
-						responseJson(res,"{\"code\":1,\"msg\":\"键不存在\"}");
+						rvo = new ResponseVo("1","键不存在");
 					}else{
 						uk.setKeyName(keyName);
 						if(StringUtil.isNotBlank(keyDescription))
 							uk.setKeyDescription(keyDescription);
 						userService.updateSKey(uk);
-						responseJson(res,"{\"code\":0,\"msg\":\"修改成功\"}");
+						rvo = new ResponseVo("0","修改成功");
 					}
 				}
 			}else if("del".equals(op)){
 				if(StringUtil.isBlank(sKeyId)){
-					responseJson(res,"{\"code\":1,\"msg\":\"键不存在\"}");
+					rvo = new ResponseVo("1","键不存在");
 				}else{
 					userService.deleteSKey(Long.parseLong(sKeyId));
-					responseJson(res,"{\"code\":0,\"msg\":\"删除成功\"}");
+					rvo = new ResponseVo("0","删除成功");
 				}
 			}
 			session.setAttribute(Constants.SESSION_USER, userService.getUserBean(user.getUserId()));
 		}
+		return rvo;
 	}
 	@RequestMapping("/toLogin")
 	public String toLogin(){
@@ -207,15 +208,6 @@ public class MainController extends BaseController{
 		return "fileManager";
 	}
 	
-	private void responseJson(ServletResponse res,String context){
-		res.setCharacterEncoding("UTF-8");
-		res.setContentType("application/x-json");
-		try {
-			res.getWriter().print(context);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 	private boolean verifyValid(String verify,HttpSession session){
 		if(StringUtil.isBlank(verify))
 			return false;
